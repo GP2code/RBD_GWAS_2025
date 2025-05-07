@@ -1,7 +1,7 @@
 # Meta-analysis of GWAS summary statistics
-## using all-RBD analysis as example
+## Using all-RBD analysis as example
 
-## metal code to perform meta-analysis of fullSTATS
+## Metal code to perform meta-analysis of fullSTATS
 module load metal
 metal 
     SCHEME STDERR
@@ -21,20 +21,20 @@ metal
     ANALYZE HETEROGENEITY
     QUIT    
 
-### clean up metal output
+### Clean up metal output
 awk 'BEGIN{FS=OFS="\t"}{split($1,snp,":"); print snp[1],snp[2]}' temp1.tbl > chrbp.txt
 sed 's/chr//g' chrbp.txt > chrbp2.txt
 paste chrbp2.txt temp1.tbl > results/META_nba_omnix.tbl 
 mv temp1.tbl.info results/META_nba_omnix.tbl.info 
 
-## generate summary statistics and plots
+## Generate summary statistics and plots
 cp results/META_nba_omnix.tbl meta.tab
 R < ~/runs/emsom/scripts/sumstats_from_meta.R --no-save
 mv fullSTATS.meta.tab results/fullSTATS_meta_META_nba_omnix.txt
 mv QQ.meta.tiff results/QQ_meta_META_nba_omnix.tiff
 mv ManH.meta.tiff results/ManH_meta_META_nba_omnix.tiff
 
-## annotate fullSTATS
+## Annotate 
 head -n1 results/fullSTATS_meta_META_nba_omnix.txt > header.txt 
 awk '{print $1,$2,$2,$5,$4}' results/fullSTATS_meta_META_nba_omnix.txt | sed '1d' > input.annovar2.txt
 perl ~/runs/emsom/softwares/annovar/table_annovar.pl input.annovar2.txt ~/runs/emsom/softwares/annovar/humandb/ \
