@@ -26,13 +26,14 @@ This is the online repository for our study, and contains code for all analyses 
 | 03_colocalization.R | Run colocalization analyses with GTEx eQTL data |
 
 ### Software Used
-| Software | Version | Resource URL | Notes |
+| Software | Version | Resource URL | RRID | Notes |
 | -------- | ------- | ------------ | ----- |
-| PLINK | 1.9 | https://www.cog-genomics.org/plink/ | Used for QC and various genetic analyses |
-| R | 4.2 | http://www.r-project.org/ | Used for data processing, colocalization, and fine-mapping. Packages: data.table, qqman, dplyr, SKAT, coloc, susieR, magrittr, ggplot | 
-| perl | 5.36.1 | https://www.perl.org/get.html | Used with ANNOVAR for variant annotation |
-| metal | 2011-03-25 | https://csg.sph.umich.edu/abecasis/metal/download/ | Used for performing meta-analyses of GWAS summary statistics | 
-| FINEMAP | 1.4.2 | http://www.christianbenner.com | Used for fine-mapping |
-| gcta64 | 1.94.1 | https://yanglab.westlake.edu.cn/software/gcta/ | Used for conditional and joint analyses |
+| PLINK | 1.9 | https://www.cog-genomics.org/plink/ | RRID:SCR_001757 | Used for QC and various genetic analyses |
+| R | 4.2 | http://www.r-project.org/ | RRID:SCR_001905 | Used for data processing, colocalization, and fine-mapping. Packages: data.table, qqman, dplyr, SKAT, coloc, susieR, magrittr, ggplot | 
+| perl | 5.36.1 | https://www.perl.org/get.html | RRID:SCR_018313 | Used with ANNOVAR for variant annotation |
+| metal | 2011-03-25 | https://csg.sph.umich.edu/abecasis/metal/download/ | RRID:SCR_002013 | Used for performing meta-analyses of GWAS summary statistics | 
+| FINEMAP | 1.4.2 | http://www.christianbenner.com | NA | Used for fine-mapping |
+| gcta64 | 1.94.1 | https://yanglab.westlake.edu.cn/software/gcta/ | NA | Used for conditional and joint analyses |
+| ANNOVAR | NA | https://annovar.openbioinformatics.org/en/latest/ | RRID:SCR_012821 | Used with perl for variant annotation | 
 
 
