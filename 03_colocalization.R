@@ -1,4 +1,17 @@
+######################################################
+###                                                ###
+### Script  03_colocalization.R                    ###
+###                                                ###
+### Project Genome-wide association study of       ### 
+###             REM-sleep behaviour disorder       ###
+###             identifies new risk loci           ###
+###                                                ###
+### Last update June, 2025                         ###
+###                                                ###
+######################################################
+
 #### Colocalization using GTEx v7 eQTL data 
+
 # Load libraries
 library(data.table)
 library(dplyr)
@@ -34,16 +47,16 @@ eqtl_formatted <- eqtl %>%
     ) %>%
   select(snp = variant_id, chr, pos, A1, A2, gene_id, beta = slope, varbeta, MAF = maf, N, type, P = pval_nominal)
 
-## Filter both datasets for +/- 500kb of lead RCOR1 snp
-# lead var is rs35785423 
+## Filter both datasets for +/- 500kb of lead RCOR1 SNP
+# Lead variant is rs35785423 
 eqtl_formatted <- eqtl_formatted %>% filter(pos >= 102574798 & pos <= 103574798)
 gwas_formatted <- gwas_formatted %>% filter(pos >= 102574798 & pos <= 103574798)
 
-## Match SNPs and prep input
+## Match SNPs and prepare input
 common_snps <- intersect(gwas_formatted$snp, eqtl_formatted$snp)
 length(common_snps)
 
-# Flip snp id allele coding to capture more matches
+# Flip SNO ID allele coding to capture more matches
 gwas_unmatched <- gwas_formatted %>% filter(!(snp %in% common_snps))
 eqtl_unmatched <- eqtl_formatted %>% filter(!(snp %in% common_snps))
 
@@ -54,7 +67,7 @@ gwas_unmatched_flipped <- gwas_unmatched %>%
 
 flipped_matches <- intersect(gwas_unmatched_flipped$snp_flipped, eqtl_formatted$snp)
 
-# Replace snp names with flipped versions where needed
+# Replace SNP names with flipped versions where needed
 gwas_unmatched_flipped <- gwas_unmatched_flipped %>%
   filter(snp_flipped %in% flipped_matches) %>%
   mutate(snp = snp_flipped) %>%
@@ -69,7 +82,7 @@ gwas_final <- bind_rows(
 # Pull only matches from eQTL data
 eqtl_final <- eqtl_formatted %>% filter(snp %in% gwas_final$snp)
 
-# Log snp counts
+# Log SNP counts
 cat("SNPs before flipping:", length(common_snps), "\n")
 cat("SNPs rescued by flipping:", length(flipped_matches), "\n")
 cat("Total overlapping SNPs after flipping:", nrow(gwas_final), "\n")
@@ -78,17 +91,17 @@ cat("Total overlapping SNPs after flipping:", nrow(gwas_final), "\n")
 # Remove duplicated SNPs
 gwas_final <- gwas_final %>% distinct(snp, .keep_all = TRUE)
 
-# combine datasets
+# Combine datasets
 df <- dplyr::inner_join(gwas_final, eqtl_final, by = "snp", suffix = c(".gwas", ".eqtl"))
 
 # Get list of unique genes in eQTL data
 genes <- unique(df$gene_id)
 
-# apply colocalization function based on gene ID
+# Apply colocalization function based on gene ID
 results <- lapply(genes, function(gene) {
   df2 <- df[df$gene_id == gene, ]
 
-    # remove dup snps
+    # Remove duplicated SNPs
     df2 <- df2[!duplicated(df2$snp), ]
 
     # Skip genes with too few SNPs
@@ -105,12 +118,12 @@ results <- lapply(genes, function(gene) {
         snp = df2$snp
     )
 
-    # Prep eQTL input
+    # Prepare eQTL input
     dataset2 <- list(
         beta = df2$beta.eqtl,
         varbeta = df2$varbeta.eqtl,
         MAF = df2$MAF.eqtl,
-        N = df2$N.eqtl[1],        # use eQTL sample size
+        N = df2$N.eqtl[1],        # Use eQTL sample size
         type = "quant",
         snp = df2$snp
     )
@@ -124,8 +137,4 @@ results <- lapply(genes, function(gene) {
 results_table <- do.call(rbind, results)
 results_table <- results_table %>%
   mutate(across(where(is.numeric), ~ round(., 4)))
-write.table(results_table,"tissue_results.txt",col.names = T, row.names = F, quote = F)
-
-
-
-
+write.table(results_table,"tissue_results.txt",col.names = T, row.names = F, quote = F
